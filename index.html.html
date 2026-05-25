@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Token Generator</title>
+</head>
+<body>
+
+<h2>Token Form</h2>
+
+<form id="tokenForm">
+
+  <input type="text" id="name" placeholder="Name" required><br><br>
+
+  <input type="text" id="phone" placeholder="Phone Number" required><br><br>
+
+  <input type="text" id="address" placeholder="Address" required><br><br>
+
+  <input type="text" id="visit" placeholder="Why Visit" required><br><br>
+
+  <input type="text" id="aadhaar" placeholder="Aadhaar Last 4 Digit" maxlength="4" required><br><br>
+
+  <button type="submit">Generate Token</button>
+
+</form>
+
+<h3 id="result"></h3>
+
+<script>
+
+const scriptURL = "YOUR_GOOGLE_SCRIPT_URL";
+
+document.getElementById("tokenForm").addEventListener("submit", async function(e){
+
+  e.preventDefault();
+
+  const data = {
+    name: document.getElementById("name").value,
+    phone: document.getElementById("phone").value,
+    address: document.getElementById("address").value,
+    visit: document.getElementById("visit").value,
+    aadhaar: document.getElementById("aadhaar").value
+  };
+
+  const response = await fetch(scriptURL,{
+    method:"POST",
+    body: JSON.stringify(data)
+  });
+
+  const result = await response.json();
+
+  if(result.status == "duplicate_phone"){
+    document.getElementById("result").innerHTML = "Phone number already exists!";
+  }
+  else if(result.status == "duplicate_aadhaar"){
+    document.getElementById("result").innerHTML = "Aadhaar already exists!";
+  }
+  else{
+    document.getElementById("result").innerHTML =
+      "Your Token Number: " + result.token;
+  }
+
+});
+
+</script>
+
+</body>
+</html>
