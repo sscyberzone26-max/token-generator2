@@ -224,7 +224,8 @@ body{
 
 <script>
 const GOOGLE_SHEET_ID = "1L9qM7ioM7x1hFzriVwcNiZ6Tj_W1MFf_9vbzHKYrZ0g";
-const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/" + GOOGLE_SHEET_ID + "/edit?usp=sharing";
+const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1L9qM7ioM7x1hFzriVwcNiZ6Tj_W1MFf_9vbzHKYrZ0g/edit?usp=sharing";
+const scriptURL = "https://script.google.com/macros/s/AKfycbyaISMU5cyvK1ZD0R2Jbogg_SYLkUxa2kcGs90Qxl10DyRLx7eJoxPMyPcm1Gxe4-eJ0w/exec";
 </script>
 
 </head>
@@ -287,9 +288,12 @@ function load(){
     ];
     render(); return;
   }
-  google.script.run.withSuccessHandler(d=>{rows=d||[];render();document.getElementById("updated").textContent=" Last update: "+new Date().toLocaleTimeString();})
-    .withFailureHandler(()=>document.getElementById("list").innerHTML='<div class="empty">Unable to load Google Sheet data.</div>')
-    .getTokenData(GOOGLE_SHEET_ID);
+fetch(scriptURL + "?action=getTokens")
+  .then(res => res.json())
+  .then(data => {
+      rows = data;
+      render();
+  });
 }
 function render(){
   const q=document.getElementById("search").value.toLowerCase().trim();
