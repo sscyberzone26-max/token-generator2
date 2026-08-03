@@ -1,1290 +1,320 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>Token Generator</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SS Cyber Zone — Live Token</title>
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{
+  margin:0;font-family:Arial,Helvetica,sans-serif;color:#111a3a;
+  background:
+    radial-gradient(circle at 10% 15%,rgba(76,0,255,.32),transparent 30%),
+    radial-gradient(circle at 90% 25%,rgba(0,183,255,.25),transparent 30%),
+    linear-gradient(135deg,#05082d 0%,#10135d 42%,#30108b 100%);
+  min-height:100vh;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;
+  background-image:linear-gradient(115deg,transparent 45%,#7d5cff 46%,transparent 47%),
+                   linear-gradient(65deg,transparent 45%,#00c6ff 46%,transparent 47%);
+  background-size:170px 170px;
+}
+.wrap{max-width:1250px;margin:auto;padding:22px 14px 90px;position:relative}
+.top{display:flex;align-items:center;justify-content:space-between;gap:15px;color:#fff}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{
+  width:58px;height:58px;border:3px solid #27a9ff;border-radius:18px;
+  display:grid;place-items:center;font-size:23px;font-weight:900;
+  background:rgba(255,255,255,.08);box-shadow:0 0 25px #008cff55
+}
+.brand h1{margin:0;font-size:27px}.brand h1 span{color:#24b8ff}
+.brand p{margin:3px 0 0;color:#ddd;font-size:14px}
+.live{border:1px solid #3d78b5;background:#10244d;padding:10px 15px;border-radius:25px;font-weight:bold}
+.dot{display:inline-block;width:10px;height:10px;background:#2ee889;border-radius:50%;margin-right:7px;box-shadow:0 0 12px #2ee889}
+.clock{margin-left:auto;color:#fff;text-align:right;background:#0d1644aa;border:1px solid #ffffff22;padding:9px 14px;border-radius:15px}
+.hero{text-align:center;color:#fff;padding:52px 10px 30px}
+.hero h2{font-size:37px;margin:0 0 8px}.hero p{margin:0;color:#d9ddff;font-size:17px}
+.line{width:85px;height:5px;background:linear-gradient(90deg,#1de9a6,#00b7ff,#8b38ff);border-radius:5px;margin:16px auto}
+.controls{display:flex;gap:10px;margin:0 auto 25px;max-width:780px}
+.search{flex:1;min-width:0;background:#fff;border:0;border-radius:14px;padding:13px 16px;font-size:15px;outline:none}
+button{border:0;border-radius:14px;padding:0 18px;background:linear-gradient(135deg,#2d72ff,#8b2cff);color:#fff;font-size:16px;font-weight:bold;cursor:pointer}
+.panel{background:#ffffffee;border-radius:20px;overflow:hidden;box-shadow:0 15px 45px #0005}
+.grid{display:grid;grid-template-columns:1fr 1.3fr 1.35fr 1.25fr 1.25fr 1fr}
+.cell{text-align:center;padding:14px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.head{background:linear-gradient(90deg,#2467ed,#7432e8);color:#fff;font-weight:800}
+.item{border-bottom:1px solid #e7e8ef}.item:last-child{border-bottom:0}
+.token{font-weight:900;color:#4a35df}
+.badge{display:inline-block;min-width:92px;padding:7px 10px;border-radius:18px;font-size:11px;font-weight:900;animation:statusGlow 1.5s ease-in-out infinite alternate}
+.pending{background:#ffb300;color:#fff;box-shadow:0 0 5px #ffd54f,0 0 10px #ffd54f}.accepted{background:#00d26a;color:#fff;box-shadow:0 0 5px #00ff88,0 0 10px #00ff88}
+.rejected{background:#ff3b3b;color:#fff;box-shadow:0 0 5px #ff4d4d,0 0 10px #ff4d4d}.done{background:#00a8ff;color:#fff;box-shadow:0 0 5px #00cfff,0 0 10px #00cfff}
+.print{background:#f0ebff;color:#6936d8}
+.info{margin-top:15px;background:#ffffffd9;border:1px solid #d6caff;border-radius:16px;padding:14px 18px;color:#23286b}
+.footer{margin-top:20px;color:#fff;text-align:center;padding:20px;background:#070d39cc;border-radius:20px}
+.empty{text-align:center;padding:45px;color:#6d7184}
+@media(max-width:760px){
+  .wrap{padding:12px 8px 55px}
+  .top{align-items:center;gap:8px}
+  .brand{gap:8px;min-width:0}
+  .brand h1{font-size:17px;white-space:nowrap}
+  .brand p{font-size:10px}
+  .logo{width:42px;height:42px;border-radius:13px;font-size:17px}
+  .clock{display:none}
+  .live{font-size:10px;padding:7px 9px;white-space:nowrap}
 
-background:#f2f2f2;
+  .hero{padding:28px 3px 18px}
+  .hero h2{font-size:24px}
+  .hero p{font-size:12px}
 
-display:flex;
-justify-content:center;
-align-items:center;
+  .token-box{padding:12px;border-radius:16px}
+  .button-row{gap:7px}
+  .get-token-btn{font-size:12px;padding:11px 10px;border-radius:12px}
+  .or-text{font-size:12px}
+  .download-link{font-size:12px}
 
-min-height:100vh;
+  .controls{
+    width:100%;
+    max-width:100%;
+    gap:6px;
+    margin-bottom:16px;
+  }
+  .search{
+    min-width:0;
+    width:100%;
+    padding:9px 10px;
+    border-radius:10px;
+    font-size:12px;
+  }
+  button{
+    flex:0 0 auto;
+    padding:0 10px;
+    min-height:34px;
+    border-radius:10px;
+    font-size:11px;
+  }
 
-padding:20px;
+  .panel{
+    overflow-x:hidden;
+    border-radius:14px;
+  }
+  .grid{
+    grid-template-columns:62px minmax(88px,1fr) 82px 76px minmax(78px,1fr);
+    min-width:0;
+  }
+  .cell{
+    padding:10px 5px;
+    font-size:11px;
+  }
+  .head .cell{
+    font-size:9px;
+    padding:8px 3px;
+  }
+  .badge{
+    min-width:0;
+    padding:5px 6px;
+    font-size:9px;
+  }
+  .info{
+    font-size:11px;
+    padding:11px 12px;
+  }
+  .footer{
+    font-size:11px;
+    padding:14px 10px;
+  }
 }
 
-.container{
+.token-box{max-width:720px;margin:22px auto 10px;padding:18px;border-radius:22px;
+background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.get-token-btn{display:inline-block;text-decoration:none;text-align:center;padding:12px 18px;
+border-radius:16px;background:linear-gradient(135deg,#00d26a,#00a8ff,#7a3cff);
+color:#fff;font-size:16px;font-weight:700;transition:.3s}
+.get-token-btn:hover{transform:scale(1.03)}
+@media(max-width:760px){.get-token-btn{font-size:17px;padding:15px}}
 
-width:100%;
-max-width:450px;
 
-background:#fff;
+.button-row{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:nowrap}
+.or-text{color:#fff;font-size:18px;font-weight:800;letter-spacing:1px}
+.qr-panel{display:none;margin-top:12px}
+.qr-panel img{width:180px;border-radius:12px;background:#fff;padding:8px}
+.download-link{display:block;margin-top:8px;color:#fff;text-decoration:none}
+@keyframes statusGlow{0%{transform:scale(1);filter:brightness(1)}100%{transform:scale(1.03);filter:brightness(1.12)}}
 
-padding:25px;
 
-border-radius:15px;
 
-box-shadow:0 0 15px rgba(0,0,0,0.1);
-
-position:relative;
+/* Full-page premium live wallpaper */
+body{
+  position:relative;
+  overflow-x:hidden;
+  background:#030617;
 }
-
-h2,h3{
-text-align:center;
-margin-bottom:15px;
+.live-wallpaper{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(0,210,255,.22),transparent 28%),
+    radial-gradient(circle at 80% 30%,rgba(120,50,255,.25),transparent 30%),
+    radial-gradient(circle at 45% 90%,rgba(0,255,180,.14),transparent 26%),
+    linear-gradient(120deg,#02051c,#0a1040 45%,#170b4a 100%);
+  background-size:160% 160%;
+  animation:bgShift 20s ease-in-out infinite alternate;
 }
-
-input,
-select,
-button,
-textarea{
-
-width:100%;
-
-padding:12px;
-
-margin-top:10px;
-
-border-radius:8px;
-
-border:1px solid #ccc;
-
-font-size:15px;
+.live-wallpaper:before,
+.live-wallpaper:after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  filter:blur(80px);
+  mix-blend-mode:screen;
 }
-
-button{
-
-background:#007bff;
-color:white;
-border:none;
-cursor:pointer;
+.live-wallpaper:before{
+  width:55vw;
+  height:55vw;
+  left:-15vw;
+  top:-18vh;
+  background:radial-gradient(circle,#00cfff 0%,rgba(0,150,255,.18) 38%,transparent 70%);
+  opacity:.48;
+  animation:blueFloat 11s ease-in-out infinite alternate;
 }
-
-button:hover{
-background:#0056b3;
+.live-wallpaper:after{
+  width:60vw;
+  height:60vw;
+  right:-18vw;
+  bottom:-22vh;
+  background:radial-gradient(circle,#963cff 0%,rgba(130,40,255,.18) 40%,transparent 72%);
+  opacity:.46;
+  animation:purpleFloat 13s ease-in-out infinite alternate;
 }
-
-.adminBtn{
-
-position:absolute;
-top:10px;
-right:10px;
-
-width:auto;
-
-padding:8px 12px;
-
-background:black;
-
-font-size:13px;
+.live-wallpaper{
+  box-shadow:inset 0 0 180px rgba(0,0,0,.28);
 }
-
-.refreshBtn{
-background:green;
+.wrap{
+  position:relative;
+  z-index:1;
 }
-
-.refreshBtn:hover{
-background:darkgreen;
+@keyframes bgShift{
+  0%{background-position:0% 20%;transform:scale(1)}
+  50%{background-position:55% 70%}
+  100%{background-position:100% 20%;transform:scale(1.04)}
 }
-
-.logoutBtn{
-background:red;
+@keyframes blueFloat{
+  0%{transform:translate3d(0,0,0) scale(.85)}
+  50%{transform:translate3d(18vw,10vh,0) scale(1.05)}
+  100%{transform:translate3d(30vw,-4vh,0) scale(.92)}
 }
-
-.deleteBtn{
-background:red;
+@keyframes purpleFloat{
+  0%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(-16vw,-10vh,0) scale(.82)}
+  100%{transform:translate3d(-30vw,3vh,0) scale(1.08)}
 }
-
-.statusBox{
-
-background:#f1f1f1;
-
-padding:12px;
-
-border-radius:10px;
-
-text-align:center;
-
-margin-bottom:20px;
-
-font-weight:bold;
+@media(prefers-reduced-motion:reduce){
+  .live-wallpaper,
+  .live-wallpaper:before,
+  .live-wallpaper:after{animation:none}
 }
-
-.noticeBox{
-
-margin-top:15px;
-
-padding:12px;
-
-background:#fff8e1;
-
-border:1px solid #ffd54f;
-
-border-radius:8px;
-
-font-size:13px;
-
-line-height:1.8;
-}
-
-#result{
-
-margin-top:20px;
-
-text-align:center;
-
-font-size:18px;
-
-color:green;
-}
-
-.adminPanel{
-display:none;
-margin-top:20px;
-}
-
-.activityBox{
-
-max-height:200px;
-
-overflow:auto;
-
-background:#f1f1f1;
-
-padding:10px;
-
-border-radius:8px;
-
-font-size:14px;
-}
-
-.clock{
-
-text-align:center;
-
-margin-top:15px;
-
-font-weight:bold;
-}
-
-
-.mainPageBtn{
-display:block;width:170px;margin:8px auto 15px;padding:8px 12px;border:none;border-radius:30px;
-font-size:14px;font-weight:bold;color:#fff;cursor:pointer;position:relative;overflow:hidden;
-background:linear-gradient(270deg,#ff0000,#ff7300,#fffb00,#48ff00,#00ffd5,#0099ff,#7a00ff,#ff00c8,#ff0000);
-background-size:1600% 1600%;animation:rgbMove 8s ease infinite,pulse 1.2s infinite;
-box-shadow:0 0 15px rgba(0,255,255,.7)}
-.mainPageBtn::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:rgba(255,255,255,.35);transform:skewX(-25deg);animation:shine 2s linear infinite}
-.mainPageBtn:hover{transform:scale(1.08)}
-@keyframes rgbMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
-@keyframes shine{0%{left:-100%}100%{left:120%}}
-
 </style>
 
+<script>
+const GOOGLE_SHEET_ID = "1L9qM7ioM7x1hFzriVwcNiZ6Tj_W1MFf_9vbzHKYrZ0g";
+const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/" + GOOGLE_SHEET_ID + "/edit?usp=sharing";
+</script>
+
 </head>
-
 <body>
+<div class="live-wallpaper" aria-hidden="true"></div>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <div class="logo">SS</div>
+      <div><h1>SS <span>CYBER ZONE</span></h1><p>Smart Token System</p></div>
+    </div>
+    <div class="live"><span class="dot"></span>LIVE</div>
+    <div class="clock" id="clock">--:--:--</div>
+  </div>
 
-<div class="container">
-
-<button class="adminBtn"
-onclick="toggleLogin()">
-
-Admin
-
-</button>
-
-<div class="statusBox"
-id="publicStatus">
-
-Loading...
-
+  <section class="hero">
+    <h2>LIVE TOKEN LIST</h2>
+    <p>Real-time · Google Sheet Connected</p>
+    <div class="token-box">
+<div class="button-row">
+<a href="2.html" class="get-token-btn">🎫 Click Here to Get Token</a>
+<span class="or-text">OR</span><a href="#" class="get-token-btn" onclick="toggleQR();return false;">📱 Show QR Code</a>
 </div>
-
-<!-- USER SECTION -->
-
-<div id="userSection">
-
-
-<h2>Token Form</h2>
-
-<button class="mainPageBtn" onclick="window.open('https://www.youtube.com/watch?v=q0vq-ZaQQ10','_blank')">Go To Main Page</button>
-
-<form id="tokenForm">
-
-
-<input type="text"
-id="name"
-placeholder="Name"
-required>
-
-<div style="display:flex; gap:5px;">
-
-<input type="text"
-value="+91"
-readonly
-style="
-width:80px;
-background:#eee;
-text-align:center;
-font-weight:bold;">
-
-<input type="tel"
-id="phone"
-placeholder="10 Digit Mobile Number"
-maxlength="10"
-required>
-
+<a class="download-link" href="qr.png" download>⬇ Download QR Code</a><div id="qrPanel" class="qr-panel"><img src="qr.png" alt="QR Code"></div>
 </div>
-
-<input type="text"
-id="address"
-placeholder="Address"
-required>
-
-<select id="visit" required>
-
-<option value="">
-Select Visit Purpose
-</option>
-
-<option value="DBT Link">
-DBT Link
-</option>
-
-<option value="Yubosokti">
-Yubosokti
-</option>
-
-<option value="Arnopurnavander">
-Arnopurnavander
-</option>
-
-<option value="CAA">
-CAA
-</option>
-
-<option value="Others">
-Others
-</option>
-
-</select>
-
-<textarea
-id="otherReason"
-placeholder="Write Reason"
-style="display:none;">
-</textarea>
-
-<input type="text"
-id="aadhaar"
-maxlength="4"
-placeholder="Aadhaar Last 4 Digit"
-required>
-
-<button type="submit">
-
-Generate Token
-
-</button>
-
-<button type="button"
-class="refreshBtn"
-onclick="location.reload()">
-
-Refresh Page
-
-</button>
-
-<div class="noticeBox">
-
-<b>গুরুত্বপূর্ণ নির্দেশিকা :</b>
-
-<ul style="
-padding-left:18px;
-margin-top:8px;">
-
-<li>
-এক মোবাইল নম্বর দ্বিতীয় বার ব্যবহার করা যাবে না।
-</li>
-
-<li>
-এক ফোন নম্বরে একাধিক ফর্ম হলে কথা বলে টোকেন নিতে হবে।
-</li>
-
-<li>
-আধার কার্ডের শেষ ৪ ডিজিট দিতে হবে।
-</li>
-
-</ul>
-
-</div>
-
-</form>
-
-<h3 id="result"></h3>
-
-</div>
-
-<!-- LOGIN -->
-
-<div id="loginBox"
-style="display:none;">
-
-<h2>Admin Login</h2>
-
-<input type="text"
-id="adminUser"
-placeholder="Username">
-
-<input type="password"
-id="adminPass"
-placeholder="Password">
-
-<button onclick="loginAdmin()">
-
-Login
-
-</button>
-
-<button onclick="backToHome()"
-style="background:gray;">
-
-Back
-
-</button>
-
-</div>
-
-<!-- ADMIN PANEL -->
-
-<div class="adminPanel"
-id="adminPanel">
-
-<h2>Admin Panel</h2>
-
-<select id="openMode">
-
-<option value="always">
-Always Open
-</option>
-
-<option value="time">
-Time Wise Open
-</option>
-
-<option value="slot">
-Slot Wise Open
-</option>
-
-</select>
-
-<!-- TIME BOX -->
-
-<div id="timeBox"
-style="display:none;">
-
-<label style="margin-top:10px; display:block;">
-Start Time
-</label>
-
-<div style="display:flex; gap:5px;">
-
-<input type="time"
-id="startTime"
-value="10:00">
-
-<select id="startAmPm"
-style="width:100px;">
-
-<option value="AM">
-AM
-</option>
-
-<option value="PM">
-PM
-</option>
-
-</select>
-
-</div>
-
-<label style="margin-top:10px; display:block;">
-End Time
-</label>
-
-<div style="display:flex; gap:5px;">
-
-<input type="time"
-id="endTime"
-value="05:00">
-
-<select id="endAmPm"
-style="width:100px;">
-
-<option value="AM">
-AM
-</option>
-
-<option value="PM">
-PM
-</option>
-
-</select>
-
-</div>
-
-<input type="number"
-id="timeSlotLimit"
-placeholder="Time Wise Slot Limit"
-value="20">
-
-</div>
-
-<!-- SLOT BOX -->
-
-<div id="slotBox"
-style="display:none;">
-
-<input type="number"
-id="slotLimit"
-placeholder="Slot Limit Example 50"
-value="50">
-
-</div>
-
-<button onclick="saveSettings()">
-
-Save Settings
-
-</button>
-
-<hr style="margin:20px 0;">
-
-<h3>Sub Admin</h3>
-
-<input type="text"
-id="subUser"
-placeholder="Sub Admin Username">
-
-<input type="password"
-id="subPass"
-placeholder="Sub Admin Password">
-
-<button onclick="addSubAdmin()">
-
-Add Sub Admin
-
-</button>
-
-<select id="subAdminList">
-</select>
-
-<button class="deleteBtn"
-onclick="deleteSubAdmin()">
-
-Delete Sub Admin
-
-</button>
-
-<hr style="margin:20px 0;">
-
-<div id="activitySection">
-
-<h3>Activity Log</h3>
-
-<div class="activityBox"
-id="activityBox">
-
-No Activity
-
-</div>
-
-</div>
-
-<hr style="margin:20px 0;">
-
-<h3>Change Password</h3>
-
-<input type="password"
-id="oldPass"
-placeholder="Old Password">
-
-<input type="password"
-id="newPass"
-placeholder="New Password">
-
-<button onclick="changePassword()">
-
-Change Password
-
-</button>
-
-<button class="logoutBtn"
-onclick="logoutAdmin()">
-
-Logout
-
-</button>
-
-<div class="clock"
-id="liveClock">
-</div>
-
-</div>
-
+    <div class="line"></div>
+  </section>
+
+  <div class="controls">
+    <input id="search" class="search" placeholder="🔎 Search by name or token..." oninput="render()">
+    <button onclick="load()">↻ REFRESH</button>
+  </div>
+
+  <section class="panel">
+    <div class="grid head">
+      <div class="cell">🎫 TOKEN</div><div class="cell">👤 NAME</div><div class="cell">📱 PHONE</div>
+      <div class="cell">⚑ STATUS</div><div class="cell">👤 HANDLED BY</div><div class="cell">🖨 PRINT</div>
+    </div>
+    <div id="list"><div class="empty">Loading live data...</div></div>
+  </section>
+
+  <div class="info">
+    <b>ℹ Live Status</b><br>
+    Status automatically updates from Google Sheet (Column H).
+    <span id="updated">Waiting for first update...</span>
+  </div>
+
+  <div class="footer">Designed for <b>SS Cyber Zone</b> · Stay Connected, Stay Updated</div>
 </div>
 
 <script>
+let rows=[];
 
-/* GOOGLE SCRIPT */
-
-const scriptURL =
-"https://script.google.com/macros/s/AKfycbylnNv2X50FcXkf95NBXNah_HHRHgHh5nY9dnptaNbhoChpfZao1fChnnprMkAVVOIp/exec";
-
-/* TOKEN */
-
-let tokenCount = 0;
-
-/* SETTINGS */
-
-let openMode = "always";
-
-let startTime = "10:00";
-let endTime = "05:00";
-
-let startAmPm = "AM";
-let endAmPm = "PM";
-
-let slotLimit = 50;
-let timeSlotLimit = 20;
-
-/* ADMIN */
-
-let mainAdmin = {
-
-user:"admin",
-pass:"8116650096"
-
-};
-
-let currentRole = "";
-let currentUser = "";
-
-let subAdmins = [];
-
-let activityLogs = [];
-
-/* VISIT */
-
-document.getElementById("visit")
-.addEventListener("change", function(){
-
-if(this.value === "Others"){
-
-document.getElementById("otherReason")
-.style.display = "block";
-
+function load(){
+  if(typeof google==="undefined" || !google.script){
+    rows=[
+      {token:"2026/08/001",name:"Rahul Das",phone:"•••• 1234",status:"Accepted",handledBy:"Suman",print:"Printed"},
+      {token:"2026/08/002",name:"Priya Mondal",phone:"•••• 5678",status:"Pending",handledBy:"Rakesh",print:"Printed"},
+      {token:"2026/08/003",name:"Sandip Roy",phone:"•••• 9101",status:"Done",handledBy:"Pappu",print:"Printed"}
+    ];
+    render(); return;
+  }
+  google.script.run.withSuccessHandler(d=>{rows=d||[];render();document.getElementById("updated").textContent=" Last update: "+new Date().toLocaleTimeString();})
+    .withFailureHandler(()=>document.getElementById("list").innerHTML='<div class="empty">Unable to load Google Sheet data.</div>')
+    .getTokenData(GOOGLE_SHEET_ID);
 }
-
-else{
-
-document.getElementById("otherReason")
-.style.display = "none";
-
+function render(){
+  const q=document.getElementById("search").value.toLowerCase().trim();
+  const list=document.getElementById("list");
+  const data=rows.filter(r=>String(r.token).toLowerCase().includes(q)||String(r.name).toLowerCase().includes(q));
+  if(!data.length){list.innerHTML='<div class="empty">No token found</div>';return;}
+  list.innerHTML=data.map(r=>{
+    const s=String(r.status||"Pending"), k=s.toLowerCase();
+    const cls=k==="accepted"?"accepted":k==="rejected"?"rejected":k==="done"?"done":"pending";
+    return `<div class="grid item">
+      <div class="cell token">${esc(r.token)}</div><div class="cell">${esc(r.name)}</div>
+      <div class="cell">${esc(r.phone)}</div><div class="cell"><span class="badge ${cls}">${esc(s)}</span></div>
+      <div class="cell">${esc(r.handledBy)}</div><div class="cell"><span class="badge print">${esc(r.print)}</span></div>
+    </div>`;
+  }).join("");
 }
-
-});
-
-/* LOGIN */
-
-function toggleLogin(){
-
-document.getElementById("userSection")
-.style.display = "none";
-
-document.getElementById("loginBox")
-.style.display = "block";
-
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function tick(){
+ const now=new Date();
+ const date=now.toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+ const time=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+ document.getElementById('clock').innerHTML='<div style="font-size:13px;color:#7fffd4;">📅 '+date+'</div><div style="font-size:20px;font-weight:bold;color:#fff;">🕒 '+time+'</div>';
 }
-
-function backToHome(){
-
-document.getElementById("userSection")
-.style.display = "block";
-
-document.getElementById("loginBox")
-.style.display = "none";
-
-}
-
-function loginAdmin(){
-
-let user =
-document.getElementById("adminUser").value;
-
-let pass =
-document.getElementById("adminPass").value;
-
-if(user === mainAdmin.user &&
-pass === mainAdmin.pass){
-
-currentRole = "main";
-
-currentUser = user;
-
-openAdminPanel();
-
-addLog("Main Admin Login");
-
-return;
-
-}
-
-let found = false;
-
-subAdmins.forEach(admin=>{
-
-if(admin.user === user &&
-admin.pass === pass){
-
-found = true;
-
-currentRole = "sub";
-
-currentUser = user;
-
-}
-
-});
-
-if(found){
-
-openAdminPanel();
-
-addLog("Sub Admin Login");
-
-}
-
-else{
-
-alert("Wrong Login");
-
-}
-
-}
-
-function openAdminPanel(){
-
-document.getElementById("loginBox")
-.style.display = "none";
-
-document.getElementById("adminPanel")
-.style.display = "block";
-
-if(currentRole === "main"){
-
-document.getElementById("activitySection")
-.style.display = "block";
-
-}
-
-else{
-
-document.getElementById("activitySection")
-.style.display = "none";
-
-}
-
-}
-
-function logoutAdmin(){
-
-document.getElementById("adminPanel")
-.style.display = "none";
-
-document.getElementById("userSection")
-.style.display = "block";
-
-}
-
-/* MODE */
-
-document.getElementById("openMode")
-.addEventListener("change", function(){
-
-let mode = this.value;
-
-document.getElementById("timeBox")
-.style.display = "none";
-
-document.getElementById("slotBox")
-.style.display = "none";
-
-if(mode === "time"){
-
-document.getElementById("timeBox")
-.style.display = "block";
-
-}
-
-else if(mode === "slot"){
-
-document.getElementById("slotBox")
-.style.display = "block";
-
-}
-
-});
-
-/* SAVE SETTINGS */
-
-function saveSettings(){
-async function saveSettings(){
-
-const data={
-
-action:"saveSettings",
-
-openMode:document.getElementById("openMode").value,
-
-slotLimit:Number(document.getElementById("slotLimit").value),
-
-timeSlotLimit:Number(document.getElementById("timeSlotLimit").value),
-
-startTime:document.getElementById("startTime").value,
-
-endTime:document.getElementById("endTime").value,
-
-startAmPm:document.getElementById("startAmPm").value,
-
-endAmPm:document.getElementById("endAmPm").value
-
-};
-
-const response=await fetch(scriptURL,{
-method:"POST",
-body:JSON.stringify(data)
-});
-
-const result=await response.json();
-
-if(result.status=="saved"){
-
-alert("Settings Saved Successfully");
-
-loadSettings();
-
-}else{
-
-alert("Save Failed");
-
-}
-
-}
-
-/* FIXED TIME CONVERT */
-
-function convertTo24(time,ampm){
-
-let parts = time.split(":");
-
-let hour = parseInt(parts[0]);
-
-let minute = parts[1];
-
-if(ampm === "PM" && hour < 12){
-
-hour += 12;
-
-}
-
-if(ampm === "AM" && hour === 12){
-
-hour = 0;
-
-}
-
-return hour.toString().padStart(2,'0')
-+ ":" + minute;
-
-}
-
-/* CLOCK */
-
-function updateClock(){
-
-let now = new Date();
-
-let currentHour =
-now.getHours().toString().padStart(2,'0');
-
-let currentMinute =
-now.getMinutes().toString().padStart(2,'0');
-
-let currentTime =
-currentHour + ":" + currentMinute;
-
-document.getElementById("liveClock")
-.innerHTML =
-"Time : " + currentTime;
-
-let text = "";
-
-let start24 =
-convertTo24(startTime,startAmPm);
-
-let end24 =
-convertTo24(endTime,endAmPm);
-
-/* ALWAYS */
-
-if(openMode === "always"){
-
-text =
-"Service : Always Open";
-
-}
-
-/* TIME */
-
-else if(openMode === "time"){
-
-if(currentTime >= start24 &&
-currentTime <= end24){
-
-text =
-"Open : " +
-
-startTime + " " +
-startAmPm +
-
-" To " +
-
-endTime + " " +
-endAmPm +
-
-" | Slot Left : " +
-
-(timeSlotLimit - tokenCount);
-
-}
-
-else{
-
-text =
-"Service Closed";
-
-}
-
-}
-
-/* SLOT */
-
-else if(openMode === "slot"){
-
-let remaining =
-slotLimit - tokenCount;
-
-if(remaining <= 0){
-
-text =
-"All Slots Full";
-
-}
-
-else{
-
-text =
-"Slot Remaining : " +
-remaining;
-
-}
-
-}
-
-document.getElementById("publicStatus")
-.innerHTML = text;
-
-}
-
-setInterval(updateClock,1000);
-
-updateClock();
-
-loadSettings();
-
-/* TOKEN */
-
-document.getElementById("tokenForm")
-.addEventListener("submit",
-async function(e){
-
-e.preventDefault();
-
-let now = new Date();
-
-let currentTime =
-now.getHours().toString().padStart(2,'0')
-+ ":" +
-now.getMinutes().toString().padStart(2,'0');
-
-let start24 =
-convertTo24(startTime,startAmPm);
-
-let end24 =
-convertTo24(endTime,endAmPm);
-
-if(openMode === "time"){
-
-if(currentTime < start24 ||
-currentTime > end24){
-
-alert("Token Service Closed");
-
-return;
-
-}
-
-if(tokenCount >= timeSlotLimit){
-
-alert("Time Wise Slots Full");
-
-return;
-
-}
-
-}
-
-if(openMode === "slot"){
-
-if(tokenCount >= slotLimit){
-
-alert("All Slots Full");
-
-return;
-
-}
-
-}
-
-const data = {
-
-name:
-document.getElementById("name").value,
-
-phone:
-"+91" +
-document.getElementById("phone").value,
-
-address:
-document.getElementById("address").value,
-
-visit:
-
-(
-document.getElementById("visit").value
-=== "Others"
-)
-
-?
-
-document.getElementById("otherReason").value
-
-:
-
-document.getElementById("visit").value,
-
-aadhaar:
-document.getElementById("aadhaar").value
-
-};
-
-const response = await fetch(scriptURL,{
-
-method:"POST",
-
-body:JSON.stringify(data)
-
-});
-
-const result =
-await response.json();
-
-if(result.status ===
-"duplicate_phone"){
-
-document.getElementById("result")
-.innerHTML =
-"Phone Number Already Exists";
-
-}
-
-else if(result.status ===
-"duplicate_aadhaar"){
-
-document.getElementById("result")
-.innerHTML =
-"Aadhaar Already Exists";
-
-}
-
-else{
-
-tokenCount++;
-
-let tokenText =
-
-"Token Number : " +
-result.token +
-
-"\n\nName : " +
-data.name +
-
-"\nPhone : " +
-data.phone +
-
-"\nVisit : " +
-data.visit +
-
-"\nAadhaar Last 4 : " +
-data.aadhaar;
-
-document.getElementById("result")
-.innerHTML =
-
-"Your Token Number : " +
-result.token;
-
-downloadToken(tokenText,result.token);
-
-}
-
-});
-
-/* DOWNLOAD TOKEN */
-
-function downloadToken(text,tokenNo){
-
-let blob = new Blob(
-[text],
-{type:"text/plain"}
-);
-
-let link =
-document.createElement("a");
-
-link.href =
-URL.createObjectURL(blob);
-
-link.download =
-"Token-" + tokenNo + ".txt";
-
-link.click();
-
-}
-
-/* SUB ADMIN */
-
-function addSubAdmin(){
-
-let user =
-document.getElementById("subUser").value;
-
-let pass =
-document.getElementById("subPass").value;
-
-if(user && pass){
-
-subAdmins.push({
-
-user:user,
-pass:pass
-
-});
-
-updateSubAdminList();
-
-alert("Sub Admin Added");
-
-}
-
-}
-
-function updateSubAdminList(){
-
-let list =
-document.getElementById("subAdminList");
-
-list.innerHTML = "";
-
-subAdmins.forEach((admin,index)=>{
-
-let option =
-document.createElement("option");
-
-option.value = index;
-
-option.text = admin.user;
-
-list.appendChild(option);
-
-});
-
-}
-
-function deleteSubAdmin(){
-
-let index =
-document.getElementById("subAdminList").value;
-
-subAdmins.splice(index,1);
-
-updateSubAdminList();
-
-alert("Deleted");
-
-}
-
-/* PASSWORD */
-
-function changePassword(){
-
-let oldPass =
-document.getElementById("oldPass").value;
-
-let newPass =
-document.getElementById("newPass").value;
-
-if(oldPass === mainAdmin.pass){
-
-mainAdmin.pass = newPass;
-
-alert("Password Changed");
-
-}
-
-else{
-
-alert("Wrong Old Password");
-
-}
-
-}
-
-/* LOG */
-
-function addLog(text){
-
-let now = new Date();
-
-let time =
-now.toLocaleTimeString();
-
-activityLogs.unshift(
-
-currentUser +
-" : " +
-text +
-" (" +
-time +
-")"
-
-);
-
-updateLogs();
-
-}
-
-function updateLogs(){
-
-let box =
-document.getElementById("activityBox");
-
-box.innerHTML = "";
-
-activityLogs.forEach(log=>{
-
-box.innerHTML +=
-
-"<div style='margin-bottom:8px;'>"
-
-+ log +
-
-"</div>";
-
-});
-
-}
-async function loadSettings(){
-
-const response=await fetch(scriptURL+"?action=getSettings");
-
-const data=await response.json();
-
-openMode=data.openMode;
-
-slotLimit=Number(data.slotLimit);
-
-timeSlotLimit=Number(data.timeSlotLimit);
-
-startTime=data.startTime;
-
-endTime=data.endTime;
-
-startAmPm=data.startAmPm;
-
-endAmPm=data.endAmPm;
-
-document.getElementById("openMode").value=openMode;
-
-document.getElementById("slotLimit").value=slotLimit;
-
-document.getElementById("timeSlotLimit").value=timeSlotLimit;
-
-document.getElementById("startTime").value=startTime;
-
-document.getElementById("endTime").value=endTime;
-
-document.getElementById("startAmPm").value=startAmPm;
-
-document.getElementById("endAmPm").value=endAmPm;
-
-document.getElementById("timeBox").style.display="none";
-document.getElementById("slotBox").style.display="none";
-
-if(openMode=="time"){
-document.getElementById("timeBox").style.display="block";
-}
-
-if(openMode=="slot"){
-document.getElementById("slotBox").style.display="block";
-}
-
-}
-
+tick();setInterval(tick,1000);load();setInterval(load,5000);
+function toggleQR(){var p=document.getElementById('qrPanel');p.style.display=p.style.display==='block'?'none':'block';}
 </script>
-
 </body>
-
 </html>
