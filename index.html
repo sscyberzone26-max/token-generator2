@@ -186,6 +186,19 @@ margin-top:15px;
 font-weight:bold;
 }
 
+
+.mainPageBtn{
+display:block;width:170px;margin:8px auto 15px;padding:8px 12px;border:none;border-radius:30px;
+font-size:14px;font-weight:bold;color:#fff;cursor:pointer;position:relative;overflow:hidden;
+background:linear-gradient(270deg,#ff0000,#ff7300,#fffb00,#48ff00,#00ffd5,#0099ff,#7a00ff,#ff00c8,#ff0000);
+background-size:1600% 1600%;animation:rgbMove 8s ease infinite,pulse 1.2s infinite;
+box-shadow:0 0 15px rgba(0,255,255,.7)}
+.mainPageBtn::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:rgba(255,255,255,.35);transform:skewX(-25deg);animation:shine 2s linear infinite}
+.mainPageBtn:hover{transform:scale(1.08)}
+@keyframes rgbMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes shine{0%{left:-100%}100%{left:120%}}
+
 </style>
 
 </head>
@@ -212,9 +225,13 @@ Loading...
 
 <div id="userSection">
 
+
 <h2>Token Form</h2>
 
+<button class="mainPageBtn" onclick="window.open('https://www.youtube.com/watch?v=q0vq-ZaQQ10','_blank')">Go To Main Page</button>
+
 <form id="tokenForm">
+
 
 <input type="text"
 id="name"
@@ -743,33 +760,46 @@ document.getElementById("slotBox")
 /* SAVE SETTINGS */
 
 function saveSettings(){
+async function saveSettings(){
 
-openMode =
-document.getElementById("openMode").value;
+const data={
 
-startTime =
-document.getElementById("startTime").value;
+action:"saveSettings",
 
-endTime =
-document.getElementById("endTime").value;
+openMode:document.getElementById("openMode").value,
 
-startAmPm =
-document.getElementById("startAmPm").value;
+slotLimit:Number(document.getElementById("slotLimit").value),
 
-endAmPm =
-document.getElementById("endAmPm").value;
+timeSlotLimit:Number(document.getElementById("timeSlotLimit").value),
 
-slotLimit =
-Number(
-document.getElementById("slotLimit").value
-);
+startTime:document.getElementById("startTime").value,
 
-timeSlotLimit =
-Number(
-document.getElementById("timeSlotLimit").value
-);
+endTime:document.getElementById("endTime").value,
 
-alert("Settings Saved");
+startAmPm:document.getElementById("startAmPm").value,
+
+endAmPm:document.getElementById("endAmPm").value
+
+};
+
+const response=await fetch(scriptURL,{
+method:"POST",
+body:JSON.stringify(data)
+});
+
+const result=await response.json();
+
+if(result.status=="saved"){
+
+alert("Settings Saved Successfully");
+
+loadSettings();
+
+}else{
+
+alert("Save Failed");
+
+}
 
 }
 
@@ -901,6 +931,8 @@ document.getElementById("publicStatus")
 setInterval(updateClock,1000);
 
 updateClock();
+
+loadSettings();
 
 /* TOKEN */
 
@@ -1202,6 +1234,52 @@ box.innerHTML +=
 "</div>";
 
 });
+
+}
+async function loadSettings(){
+
+const response=await fetch(scriptURL+"?action=getSettings");
+
+const data=await response.json();
+
+openMode=data.openMode;
+
+slotLimit=Number(data.slotLimit);
+
+timeSlotLimit=Number(data.timeSlotLimit);
+
+startTime=data.startTime;
+
+endTime=data.endTime;
+
+startAmPm=data.startAmPm;
+
+endAmPm=data.endAmPm;
+
+document.getElementById("openMode").value=openMode;
+
+document.getElementById("slotLimit").value=slotLimit;
+
+document.getElementById("timeSlotLimit").value=timeSlotLimit;
+
+document.getElementById("startTime").value=startTime;
+
+document.getElementById("endTime").value=endTime;
+
+document.getElementById("startAmPm").value=startAmPm;
+
+document.getElementById("endAmPm").value=endAmPm;
+
+document.getElementById("timeBox").style.display="none";
+document.getElementById("slotBox").style.display="none";
+
+if(openMode=="time"){
+document.getElementById("timeBox").style.display="block";
+}
+
+if(openMode=="slot"){
+document.getElementById("slotBox").style.display="block";
+}
 
 }
 
