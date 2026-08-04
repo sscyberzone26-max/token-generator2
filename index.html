@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -13,188 +12,51 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <link rel="stylesheet" href="style.css">
-
-<style>
-
-/* ===============================
-   COMPACT TOKEN TABLE
-================================ */
-
-.tableContainer {
-    width: 100%;
-    overflow-x: auto;
-    margin-top: 10px;
-    border-radius: 18px;
-}
-
-.tableContainer table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.tableContainer thead th {
-    padding: 10px 12px !important;
-    height: 42px;
-}
-
-.tableContainer tbody td {
-    padding: 7px 12px !important;
-    height: 40px;
-    line-height: 1.15;
-}
-
-.tableContainer tbody tr {
-    height: 40px;
-}
-
-/* ===============================
-   PAGINATION
-================================ */
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    margin: 14px 0 8px;
-    flex-wrap: wrap;
-}
-
-.pagination button {
-    min-width: 34px;
-    height: 34px;
-    padding: 0 10px;
-
-    border: 1px solid rgba(255,255,255,0.20);
-    border-radius: 9px;
-
-    background: rgba(255,255,255,0.08);
-    color: white;
-
-    font-family: Poppins, sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition: all 0.2s ease;
-}
-
-.pagination button:hover {
-    background: rgba(255,255,255,0.18);
-    transform: translateY(-1px);
-}
-
-.pagination button.active {
-    background: #08aaff;
-    border-color: #08aaff;
-    color: white;
-    box-shadow: 0 0 10px rgba(8,170,255,0.35);
-}
-
-.pagination button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.pagination .dots {
-    color: rgba(255,255,255,0.7);
-    padding: 0 3px;
-    font-weight: bold;
-}
-
-.pageInfo {
-    text-align: center;
-    font-size: 11px;
-    color: rgba(255,255,255,0.65);
-    margin-bottom: 8px;
-}
-
-/* Mobile */
-
-@media(max-width:600px){
-
-    .tableContainer thead th {
-        padding: 8px 7px !important;
-        font-size: 12px;
-    }
-
-    .tableContainer tbody td {
-        padding: 6px 7px !important;
-        font-size: 12px;
-        height: 36px;
-    }
-
-    .tableContainer tbody tr {
-        height: 36px;
-    }
-
-    .pagination {
-        gap: 4px;
-        margin-top: 10px;
-    }
-
-    .pagination button {
-        min-width: 30px;
-        height: 30px;
-        padding: 0 7px;
-        font-size: 11px;
-    }
-
-}
-
-</style>
 
 </head>
 
 <body>
 
-<div class="background"></div>
-
-<div class="overlay"></div>
+<div class="bg-overlay"></div>
 
 <div class="container">
 
-<!-- ================= HEADER ================= -->
+<header class="header">
 
-<header>
+<div class="header-left">
 
-<div class="logoSection">
+<h1>SS CYBER ZONE</h1>
 
-<h1>
-SS CYBER ZONE
-</h1>
+<p>Smart Token System</p>
 
-<p>
-Smart Token System
-</p>
+<div class="live-box">
 
-<div class="live">
-<span></span>
+<span class="live-dot"></span>
+
 LIVE
-</div>
 
 </div>
 
-<div class="dateTime">
+</div>
 
-<div class="dateBox">
+<div class="header-right">
+
+<div class="date-card">
 
 <i class="fa-solid fa-calendar-days"></i>
 
-<span id="date"></span>
+<span id="date">Loading...</span>
 
 </div>
 
-<div class="timeBox">
+<div class="time-card">
 
 <i class="fa-solid fa-clock"></i>
 
-<span id="time"></span>
+<span id="time">Loading...</span>
 
 </div>
 
@@ -202,30 +64,31 @@ LIVE
 
 </header>
 
-
-<!-- ================= TITLE ================= -->
-
-<div class="title">
+<section class="title-area">
 
 <h2>
+
 LIVE TOKEN LIST
+
 </h2>
 
 <p>
-Real-time update
+
+• Real-time Update •
+
 </p>
 
-</div>
+</section>
 
-
-<!-- ================= BUTTON ================= -->
-
-<div class="buttonArea">
+<section class="button-area">
 
 <a
+
 href="https://sscyberzone26-max.github.io/SS-CYBER-ZONE/"
+
 target="_blank"
-class="btn primary">
+
+class="main-btn">
 
 <i class="fa-solid fa-ticket"></i>
 
@@ -233,10 +96,11 @@ Get a New Token Number
 
 </a>
 
-
 <button
+
 id="showQR"
-class="btn secondary">
+
+class="main-btn secondary">
 
 <i class="fa-solid fa-qrcode"></i>
 
@@ -244,37 +108,9 @@ Show QR
 
 </button>
 
-</div>
+</section>
 
-
-<!-- ================= SEARCH ================= -->
-
-<div class="searchBox">
-
-<input
-type="text"
-id="search"
-placeholder="Search Token / Name...">
-
-</div>
-
-
-<!-- ================= COUNTER ================= -->
-
-<div class="counter">
-
-Total Live Token :
-
-<span id="totalToken">
-0
-</span>
-
-</div>
-
-
-<!-- ================= TABLE ================= -->
-
-<div class="tableContainer">
+<section class="table-box">
 
 <table>
 
@@ -282,17 +118,11 @@ Total Live Token :
 
 <tr>
 
-<th>
-Token
-</th>
+<th>Token</th>
 
-<th>
-Name
-</th>
+<th>Name</th>
 
-<th>
-Our Status
-</th>
+<th>Our Status</th>
 
 </tr>
 
@@ -303,7 +133,15 @@ Our Status
 <tr>
 
 <td colspan="3">
-Loading...
+
+<div class="loading">
+
+<i class="fa-solid fa-spinner fa-spin"></i>
+
+Loading Live Data...
+
+</div>
+
 </td>
 
 </tr>
@@ -312,20 +150,7 @@ Loading...
 
 </table>
 
-</div>
-
-
-<!-- ================= PAGE INFO ================= -->
-
-<div id="pageInfo" class="pageInfo"></div>
-
-
-<!-- ================= PAGINATION ================= -->
-
-<div id="pagination" class="pagination"></div>
-
-
-<!-- ================= FOOTER ================= -->
+</section>
 
 <footer>
 
@@ -333,42 +158,45 @@ Loading...
 
 Powered By
 
-<b>
-SS CYBER ZONE
-</b>
+<b>SS CYBER ZONE</b>
 
 </footer>
 
 </div>
 
+<!-- QR POPUP -->
 
-<!-- ================= QR MODAL ================= -->
+<div id="qrModal" class="modal">
 
-<div
-class="modal"
-id="qrModal">
+<div class="modal-content">
 
-<div class="modalBox">
+<span id="closeQR">
 
-<span
-id="closeQR"
-class="close">
-×
+&times;
+
 </span>
 
 <h2>
-Scan QR
+
+Scan QR Code
+
 </h2>
 
 <img
+
 src="qr.png"
-class="qrImage"
-alt="QR">
+
+alt="QR"
+
+class="qr-image">
 
 <a
+
 href="qr.png"
+
 download
-class="download">
+
+class="download-btn">
 
 <i class="fa-solid fa-download"></i>
 
@@ -380,430 +208,7 @@ Download QR
 
 </div>
 
-
-<!-- ================= EXISTING SCRIPT ================= -->
-
 <script src="script.js"></script>
-
-
-<!-- ================= PAGINATION SCRIPT ================= -->
-
-<script>
-
-(function(){
-
-    const ROWS_PER_PAGE = 25;
-
-    let currentPage = 1;
-
-    const tableBody = document.getElementById("tableBody");
-    const pagination = document.getElementById("pagination");
-    const pageInfo = document.getElementById("pageInfo");
-    const searchInput = document.getElementById("search");
-
-    let allRows = [];
-
-    /* ===============================
-       GET REAL TOKEN ROWS
-    =============================== */
-
-    function getRows(){
-
-        if(!tableBody) return [];
-
-        return Array.from(
-            tableBody.querySelectorAll("tr")
-        ).filter(row => {
-
-            const cells = row.querySelectorAll("td");
-
-            return cells.length >= 3;
-
-        });
-
-    }
-
-
-    /* ===============================
-       SEARCH FILTER
-    =============================== */
-
-    function getFilteredRows(){
-
-        const searchValue =
-            searchInput ?
-            searchInput.value.trim().toLowerCase() :
-            "";
-
-        const rows = getRows();
-
-        if(!searchValue){
-
-            return rows;
-
-        }
-
-        return rows.filter(row => {
-
-            return row.innerText
-                .toLowerCase()
-                .includes(searchValue);
-
-        });
-
-    }
-
-
-    /* ===============================
-       PAGINATION
-    =============================== */
-
-    function renderPagination(totalRows){
-
-        pagination.innerHTML = "";
-
-        const totalPages =
-            Math.ceil(totalRows / ROWS_PER_PAGE);
-
-
-        if(totalPages <= 1){
-
-            pageInfo.innerHTML =
-                totalRows > 0
-                ? "Showing " + totalRows + " token(s)"
-                : "";
-
-            return;
-
-        }
-
-
-        /* PREVIOUS */
-
-        const prev =
-            document.createElement("button");
-
-        prev.innerHTML =
-            '<i class="fa-solid fa-chevron-left"></i>';
-
-        prev.disabled =
-            currentPage === 1;
-
-        prev.onclick = function(){
-
-            if(currentPage > 1){
-
-                currentPage--;
-
-                render();
-
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
-                });
-
-            }
-
-        };
-
-        pagination.appendChild(prev);
-
-
-        /* PAGE NUMBERS */
-
-        let startPage =
-            Math.max(1, currentPage - 2);
-
-        let endPage =
-            Math.min(totalPages, currentPage + 2);
-
-
-        if(startPage > 1){
-
-            addPageButton(1);
-
-            if(startPage > 2){
-
-                addDots();
-
-            }
-
-        }
-
-
-        for(
-            let i = startPage;
-            i <= endPage;
-            i++
-        ){
-
-            addPageButton(i);
-
-        }
-
-
-        if(endPage < totalPages){
-
-            if(endPage < totalPages - 1){
-
-                addDots();
-
-            }
-
-            addPageButton(totalPages);
-
-        }
-
-
-        /* NEXT */
-
-        const next =
-            document.createElement("button");
-
-        next.innerHTML =
-            '<i class="fa-solid fa-chevron-right"></i>';
-
-        next.disabled =
-            currentPage === totalPages;
-
-        next.onclick = function(){
-
-            if(currentPage < totalPages){
-
-                currentPage++;
-
-                render();
-
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
-                });
-
-            }
-
-        };
-
-        pagination.appendChild(next);
-
-
-        pageInfo.innerHTML =
-            "Page " +
-            currentPage +
-            " of " +
-            totalPages;
-
-    }
-
-
-    /* ===============================
-       PAGE BUTTON
-    =============================== */
-
-    function addPageButton(page){
-
-        const button =
-            document.createElement("button");
-
-        button.textContent = page;
-
-        if(page === currentPage){
-
-            button.classList.add("active");
-
-        }
-
-        button.onclick = function(){
-
-            currentPage = page;
-
-            render();
-
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-
-        };
-
-        pagination.appendChild(button);
-
-    }
-
-
-    /* ===============================
-       DOTS
-    =============================== */
-
-    function addDots(){
-
-        const dots =
-            document.createElement("span");
-
-        dots.className = "dots";
-
-        dots.textContent = "...";
-
-        pagination.appendChild(dots);
-
-    }
-
-
-    /* ===============================
-       MAIN RENDER
-    =============================== */
-
-    function render(){
-
-        const rows =
-            getFilteredRows();
-
-        const totalRows =
-            rows.length;
-
-        const totalPages =
-            Math.max(
-                1,
-                Math.ceil(
-                    totalRows / ROWS_PER_PAGE
-                )
-            );
-
-
-        if(currentPage > totalPages){
-
-            currentPage = totalPages;
-
-        }
-
-
-        /* Hide ALL rows */
-
-        const allTableRows =
-            getRows();
-
-        allTableRows.forEach(row => {
-
-            row.style.display = "none";
-
-        });
-
-
-        /* Show current 25 rows */
-
-        const start =
-            (currentPage - 1) *
-            ROWS_PER_PAGE;
-
-        const end =
-            start + ROWS_PER_PAGE;
-
-
-        rows.slice(start, end)
-            .forEach(row => {
-
-                row.style.display = "";
-
-            });
-
-
-        /* PAGE INFO */
-
-        if(totalRows === 0){
-
-            pageInfo.innerHTML = "";
-
-        }else{
-
-            const from =
-                start + 1;
-
-            const to =
-                Math.min(
-                    end,
-                    totalRows
-                );
-
-            pageInfo.innerHTML =
-                "Showing " +
-                from +
-                " - " +
-                to +
-                " of " +
-                totalRows;
-
-        }
-
-
-        renderPagination(totalRows);
-
-    }
-
-
-    /* ===============================
-       SEARCH EVENT
-    =============================== */
-
-    if(searchInput){
-
-        searchInput.addEventListener(
-            "input",
-            function(){
-
-                currentPage = 1;
-
-                setTimeout(
-                    render,
-                    50
-                );
-
-            }
-        );
-
-    }
-
-
-    /* ===============================
-       WATCH LIVE TOKEN UPDATE
-    =============================== */
-
-    const observer =
-        new MutationObserver(function(){
-
-            setTimeout(
-                render,
-                50
-            );
-
-        });
-
-
-    observer.observe(
-        tableBody,
-        {
-            childList: true,
-            subtree: true
-        }
-    );
-
-
-    /* ===============================
-       INITIAL LOAD
-    =============================== */
-
-    setTimeout(
-        render,
-        500
-    );
-
-
-    setInterval(
-        render,
-        2000
-    );
-
-})();
-
-</script>
 
 </body>
 </html>
