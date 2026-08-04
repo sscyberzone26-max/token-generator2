@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SS CYBER ZONE | Smart Token System</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<link rel="stylesheet" href="style.css">
+
+
+
+
+
+<style>
+/* Compact live-token layout */
+body{
+  background:
+    radial-gradient(circle at 15% 20%,rgba(0,190,255,.16),transparent 27%),
+    radial-gradient(circle at 85% 25%,rgba(135,65,255,.18),transparent 29%),
+    radial-gradient(circle at 50% 90%,rgba(0,255,190,.08),transparent 32%),
+    #050816;
+  position:relative;
+}
+body:before,body:after{
+  content:"";
+  position:fixed;
+  inset:-30%;
+  z-index:-3;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 30%,rgba(0,190,255,.13),transparent 18%),
+    radial-gradient(circle at 80% 65%,rgba(145,70,255,.14),transparent 20%);
+  filter:blur(20px);
+  animation:wallMove 18s ease-in-out infinite alternate;
+}
+body:after{
+  z-index:-2;
+  opacity:.35;
+  background-image:radial-gradient(circle,rgba(255,255,255,.55) 0 1px,transparent 1.5px);
+  background-size:95px 95px;
+  animation:stars 25s linear infinite;
+}
+@keyframes wallMove{
+  0%{transform:translate3d(-5%,-2%,0) scale(1)}
+  50%{transform:translate3d(4%,3%,0) scale(1.08)}
+  100%{transform:translate3d(-2%,6%,0) scale(1.02)}
+}
+@keyframes stars{to{transform:translate3d(95px,95px,0)}}
+
+.token-summary{
+  display:flex;
+  justify-content:center;
+  margin:3px 0 8px;
+}
+.total-token-card{
+  min-width:220px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 16px;
+  border-radius:15px;
+  border:1px solid rgba(0,220,255,.22);
+  background:rgba(7,15,35,.72);
+  box-shadow:0 7px 25px rgba(0,0,0,.20);
+}
+.summary-icon{
+  width:34px;height:34px;border-radius:10px;
+  display:grid;place-items:center;
+  background:rgba(0,210,255,.10);
+  color:#8eeeff;
+}
+.total-token-card small{display:block;color:#aeb9d6;font-size:10px}
+.total-token-card strong{display:block;font-size:20px;line-height:1.05}
+
+.refresh-area{
+  display:flex;
+  justify-content:center;
+  margin:0 0 9px;
+}
+.refresh-list-btn{
+  border:1px solid rgba(0,210,255,.32);
+  border-radius:10px;
+  padding:7px 15px;
+  color:#eafaff;
+  background:rgba(8,27,52,.78);
+  font:600 11px Poppins,sans-serif;
+  cursor:pointer;
+  transition:.2s;
+}
+.refresh-list-btn:hover{
+  background:rgba(0,160,220,.20);
+  box-shadow:0 0 16px rgba(0,210,255,.18);
+  transform:translateY(-1px);
+}
+.refresh-list-btn.loading i{animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.table-box{
+  overflow:hidden;
+  border-radius:18px;
+}
+table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+}
+th{
+  padding:8px 10px !important;
+  font-size:13px !important;
+  line-height:1.1 !important;
+}
+td{
+  padding:7px 10px !important;
+  font-size:13px !important;
+  line-height:1.15 !important;
+  height:31px;
+}
+
+/* IMPORTANT: only the Our Status cell is colored */
+tbody tr td:last-child.status-not-there{
+  background:#050505 !important;
+  color:#fff !important;
+}
+tbody tr td:last-child.status-rejected{
+  background:#8e0718 !important;
+  color:#fff !important;
+}
+tbody tr td:last-child.status-all-pass,
+tbody tr td:last-child.status-approved,
+tbody tr td:last-child.status-accepted{
+  background:#08734e !important;
+  color:#fff !important;
+}
+tbody tr td:last-child.status-pending{
+  background:#6d4d10 !important;
+  color:#fff6d0 !important;
+}
+tbody tr td:last-child.status-violate,
+tbody tr td:last-child.status-violated{
+  background:#5c2675 !important;
+  color:#fff !important;
+}
+tbody tr td:last-child{
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.pagination{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:5px;
+  padding:10px 6px 2px;
+}
+.pagination button{
+  min-width:31px;
+  height:29px;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:8px;
+  color:#eaf6ff;
+  background:rgba(18,29,57,.82);
+  cursor:pointer;
+  font:600 11px Poppins,sans-serif;
+}
+.pagination button:hover,
+.pagination button.active{
+  border-color:rgba(0,220,255,.55);
+  background:rgba(0,150,210,.22);
+  box-shadow:0 0 12px rgba(0,210,255,.14);
+}
+.pagination button:disabled{opacity:.35;cursor:not-allowed}
+.pagination .page-info{
+  color:#9faccc;
+  font-size:10px;
+  padding:0 4px;
+}
+@media(max-width:650px){
+  th{font-size:10px !important;padding:6px !important}
+  td{font-size:10px !important;padding:5px 6px !important;height:26px}
+  .total-token-card{min-width:185px}
+}
+</style>
+
+
+
+
+<style id="new-live-wallpaper">
+body{
+  background:
+    radial-gradient(ellipse at 20% 15%,rgba(0,210,255,.18),transparent 35%),
+    radial-gradient(ellipse at 85% 85%,rgba(166,82,255,.18),transparent 36%),
+    linear-gradient(125deg,#04131f,#071d31 38%,#15133b 72%,#21143e) !important;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;
+  width:150vw;
+  height:75vh;
+  left:-25vw;
+  top:12vh;
+  z-index:-10;
+  pointer-events:none;
+  border-radius:50%;
+  background:
+    radial-gradient(ellipse at center,
+      rgba(0,220,255,.14) 0%,
+      rgba(61,145,255,.09) 28%,
+      rgba(139,75,255,.08) 48%,
+      transparent 70%);
+  filter:blur(28px);
+  transform:rotate(-8deg);
+  animation:auroraWave 18s ease-in-out infinite alternate;
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-9;
+  pointer-events:none;
+  opacity:.7;
+  background:
+    radial-gradient(circle at 12% 32%,rgba(82,220,255,.14) 0 2px,transparent 3px),
+    radial-gradient(circle at 78% 24%,rgba(174,122,255,.13) 0 2px,transparent 3px),
+    radial-gradient(circle at 63% 78%,rgba(90,205,255,.11) 0 1.5px,transparent 2.5px),
+    radial-gradient(circle at 30% 82%,rgba(187,115,255,.10) 0 1.5px,transparent 2.5px);
+  background-size:260px 260px,330px 330px,210px 210px,290px 290px;
+  animation:bubbleDrift 30s linear infinite;
+}
+@keyframes auroraWave{
+  0%{transform:translate3d(-4%,2%,0) rotate(-8deg) scale(1)}
+  35%{transform:translate3d(5%,-2%,0) rotate(-4deg) scale(1.08)}
+  70%{transform:translate3d(1%,5%,0) rotate(-11deg) scale(1.04)}
+  100%{transform:translate3d(-5%,1%,0) rotate(-6deg) scale(1.1)}
+}
+@keyframes bubbleDrift{
+  0%{background-position:0 0,0 0,0 0,0 0}
+  50%{background-position:45px -35px,-55px 45px,35px 55px,-45px -25px}
+  100%{background-position:90px -70px,-110px 90px,70px 110px,-90px -50px}
+}
+</style>
+
+
+<style id="get-token-live-animation">
+/* Strong live animation for Get Token / Token Number */
+a[href*="token"], button[id*="token"], button[class*="token"],
+.get-token, .getToken, .token-btn, .token-button{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  transition:transform .2s ease,filter .2s ease,box-shadow .2s ease;
+  animation:getTokenPulse 1.45s ease-in-out infinite;
+}
+a[href*="token"]::after, button[id*="token"]::after,
+button[class*="token"]::after, .get-token::after,
+.getToken::after, .token-btn::after, .token-button::after{
+  content:"";
+  position:absolute;
+  top:-20%;
+  left:-90%;
+  width:45%;
+  height:140%;
+  pointer-events:none;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.75),transparent);
+  transform:skewX(-20deg);
+  animation:getTokenShine 1.65s linear infinite;
+  z-index:5;
+}
+a[href*="token"]:hover, button[id*="token"]:hover,
+button[class*="token"]:hover, .get-token:hover,
+.getToken:hover, .token-btn:hover, .token-button:hover{
+  transform:translateY(-2px) scale(1.025);
+  filter:brightness(1.18);
+  box-shadow:0 0 22px rgba(0,210,255,.45),0 0 42px rgba(120,70,255,.22);
+}
+@keyframes getTokenPulse{
+  0%,100%{
+    filter:brightness(1);
+    box-shadow:0 0 8px rgba(0,210,255,.18);
+  }
+  50%{
+    filter:brightness(1.16);
+    box-shadow:0 0 24px rgba(0,210,255,.48),0 0 38px rgba(120,70,255,.22);
+  }
+}
+@keyframes getTokenShine{
+  0%{left:-90%}
+  55%{left:135%}
+  100%{left:135%}
+}
+</style>
+
+
+<style id="new-token-eye-catch">
+/* Strong animated glow for "Get a New Token Number" */
+button, a{
+  --new-token-glow: rgba(0,210,255,.0);
+}
+.get-new-token, .getNewToken, .new-token-btn, .new-token-button,
+#newToken, #getNewToken, [id*="newToken"], [class*="new-token"]{
+  position:relative !important;
+  overflow:hidden !important;
+  isolation:isolate;
+  animation:newTokenGlow 1.15s ease-in-out infinite !important;
+  transform-origin:center;
+}
+.get-new-token::before, .getNewToken::before, .new-token-btn::before,
+.new-token-button::before, #newToken::before, #getNewToken::before,
+[id*="newToken"]::before, [class*="new-token"]::before{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  border-radius:inherit;
+  pointer-events:none;
+  z-index:-1;
+  background:linear-gradient(90deg,#00d9ff,#7b4dff,#00eaff,#7b4dff,#00d9ff);
+  background-size:300% 100%;
+  filter:blur(7px);
+  opacity:.95;
+  animation:newTokenBorder 2s linear infinite;
+}
+.get-new-token::after, .getNewToken::after, .new-token-btn::after,
+.new-token-button::after, #newToken::after, #getNewToken::after,
+[id*="newToken"]::after, [class*="new-token"]::after{
+  content:"";
+  position:absolute;
+  top:-30%;
+  left:-80%;
+  width:45%;
+  height:160%;
+  pointer-events:none;
+  z-index:3;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.9),transparent);
+  transform:skewX(-20deg);
+  animation:newTokenShine 1.25s linear infinite;
+}
+@keyframes newTokenGlow{
+  0%,100%{
+    transform:scale(1);
+    filter:brightness(1);
+    box-shadow:0 0 8px rgba(0,210,255,.35),0 0 18px rgba(110,70,255,.18);
+  }
+  50%{
+    transform:scale(1.035);
+    filter:brightness(1.22);
+    box-shadow:0 0 18px rgba(0,225,255,.8),0 0 38px rgba(115,70,255,.55),0 0 60px rgba(0,190,255,.22);
+  }
+}
+@keyframes newTokenBorder{
+  0%{background-position:0% 50%}
+  100%{background-position:300% 50%}
+}
+@keyframes newTokenShine{
+  0%{left:-80%}
+  55%,100%{left:135%}
+}
+</style>
+
+
+<style id="get-new-token-round-glow">
+/* Get a New Token Number — rounded, bright, clearly visible */
+.get-new-token-round-glow{
+  border-radius:999px !important;
+  position:relative !important;
+  overflow:hidden !important;
+  isolation:isolate !important;
+  border:2px solid rgba(120,235,255,.95) !important;
+  animation:roundTokenGlow 1.1s ease-in-out infinite !important;
+}
+.get-new-token-round-glow::before{
+  content:"";
+  position:absolute;
+  inset:-5px;
+  border-radius:999px;
+  z-index:-1;
+  pointer-events:none;
+  background:linear-gradient(90deg,#00dfff,#7a4dff,#00dfff);
+  background-size:220% 100%;
+  filter:blur(8px);
+  opacity:1;
+  animation:roundTokenBorder 1.7s linear infinite;
+}
+.get-new-token-round-glow::after{
+  content:"";
+  position:absolute;
+  top:-20%;
+  left:-70%;
+  width:42%;
+  height:140%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.95),transparent);
+  transform:skewX(-18deg);
+  pointer-events:none;
+  z-index:4;
+  animation:roundTokenShine 1.25s linear infinite;
+}
+@keyframes roundTokenGlow{
+  0%,100%{
+    transform:scale(1);
+    filter:brightness(1);
+    box-shadow:0 0 10px rgba(0,220,255,.7),0 0 24px rgba(115,70,255,.35);
+  }
+  50%{
+    transform:scale(1.045);
+    filter:brightness(1.25);
+    box-shadow:0 0 18px rgba(0,230,255,1),0 0 40px rgba(120,65,255,.8),0 0 65px rgba(0,210,255,.35);
+  }
+}
+@keyframes roundTokenBorder{
+  0%{background-position:0% 50%}
+  100%{background-position:220% 50%}
+}
+@keyframes roundTokenShine{
+  0%{left:-70%}
+  55%,100%{left:135%}
+}
+</style>
+<script>
+(function(){
+  function markNewToken(){
+    const els = document.querySelectorAll('button,a,[role="button"],input[type="button"],input[type="submit"]');
+    els.forEach(el=>{
+      const text=(el.innerText || el.value || '').replace(/\s+/g,' ').trim().toLowerCase();
+      if(text.includes('get a new token number')){
+        el.classList.add('get-new-token-round-glow');
+      }
+    });
+  }
+  markNewToken();
+  new MutationObserver(markNewToken).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+
+<style id="status-text-only">
+/* Our Status: color the text only, keep the table row/cell background unchanged */
+tbody tr.status-not-there,
+tbody tr.status-rejected,
+tbody tr.status-all-pass,
+tbody tr.status-approved,
+tbody tr.status-accepted,
+tbody tr.status-pending,
+tbody tr.status-violate,
+tbody tr.status-violated,
+tbody tr td:last-child.status-not-there,
+tbody tr td:last-child.status-rejected,
+tbody tr td:last-child.status-all-pass,
+tbody tr td:last-child.status-approved,
+tbody tr td:last-child.status-accepted,
+tbody tr td:last-child.status-pending,
+tbody tr td:last-child.status-violate,
+tbody tr td:last-child.status-violated{
+  background: transparent !important;
+}
+
+tbody tr td:last-child.status-not-there{
+  color:#111111 !important;
+}
+tbody tr td:last-child.status-rejected{
+  color:#e11d2e !important;
+}
+tbody tr td:last-child.status-all-pass,
+tbody tr td:last-child.status-approved,
+tbody tr td:last-child.status-accepted{
+  color:#10b981 !important;
+}
+tbody tr td:last-child.status-pending{
+  color:#d6a21e !important;
+}
+tbody tr td:last-child.status-violate,
+tbody tr td:last-child.status-violated{
+  color:#a855f7 !important;
+}
+
+/* If the second status script puts the class on the whole row,
+   keep every cell's background unchanged and color only the status text. */
+tbody tr.status-not-there td:last-child{color:#111111 !important;}
+tbody tr.status-rejected td:last-child{color:#e11d2e !important;}
+tbody tr.status-all-pass td:last-child,
+tbody tr.status-approved td:last-child,
+tbody tr.status-accepted td:last-child{color:#10b981 !important;}
+tbody tr.status-pending td:last-child{color:#d6a21e !important;}
+tbody tr.status-violate td:last-child,
+tbody tr.status-violated td:last-child{color:#a855f7 !important;}
+</style>
+
+</head>
+
+<body>
+
+<div class="bg-overlay"></div>
+
+<div class="container">
+
+<header class="header">
+
+<div class="header-left">
+
+<h1>SS CYBER ZONE</h1>
+
+<p>Smart Token System</p>
+
+<div class="live-box">
+
+<span class="live-dot"></span>
+
+LIVE
+
+</div>
+
+</div>
+
+<div class="header-right">
+
+<div class="date-card">
+
+<i class="fa-solid fa-calendar-days"></i>
+
+<span id="date">Loading...</span>
+
+</div>
+
+<div class="time-card">
+
+<i class="fa-solid fa-clock"></i>
+
+<span id="time">Loading...</span>
+
+</div>
+
+</div>
+
+</header>
+
+<section class="title-area">
+
+<h2>
+
+LIVE TOKEN LIST
+
+</h2>
+
+<p>
+
+• Real-time Update •
+
+</p>
+
+</section>
+
+<section class="button-area">
+
+<a
+
+href="https://sscyberzone26-max.github.io/SS-CYBER-ZONE/"
+
+target="_blank"
+
+class="main-btn">
+
+<i class="fa-solid fa-ticket"></i>
+
+Get a New Token Number
+
+</a>
+
+<button
+
+id="showQR"
+
+class="main-btn secondary">
+
+<i class="fa-solid fa-qrcode"></i>
+
+Show QR
+
+</button>
+
+</section>
+
+<section class="token-summary">
+  <div class="total-token-card">
+    <span class="summary-icon"><i class="fa-solid fa-users"></i></span>
+    <div>
+      <small>Total Live Token</small>
+      <strong id="totalLiveToken">0</strong>
+    </div>
+  </div>
+</section>
+
+<section class="refresh-area">
+  <button id="refreshList" class="refresh-list-btn">
+    <i class="fa-solid fa-arrows-rotate"></i> Refresh List
+  </button>
+</section>
+
+<section class="table-box">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Token</th>
+
+<th>Name</th>
+
+<th>Our Status</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tableBody">
+
+<tr>
+
+<td colspan="3">
+
+<div class="loading">
+
+<i class="fa-solid fa-spinner fa-spin"></i>
+
+Loading Live Data...
+
+</div>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<div id="pagination" class="pagination" aria-label="Token list pages"></div>
+
+</section>
+
+<footer>
+
+<i class="fa-solid fa-bolt"></i>
+
+Powered By
+
+<b>SS CYBER ZONE</b>
+
+</footer>
+
+</div>
+
+<!-- QR POPUP -->
+
+<div id="qrModal" class="modal">
+
+<div class="modal-content">
+
+<span id="closeQR">
+
+&times;
+
+</span>
+
+<h2>
+
+Scan QR Code
+
+</h2>
+
+<img
+
+src="qr.png"
+
+alt="QR"
+
+class="qr-image">
+
+<a
+
+href="qr.png"
+
+download
+
+class="download-btn">
+
+<i class="fa-solid fa-download"></i>
+
+Download QR
+
+</a>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+(function(){
+  const PER_PAGE = 15;
+  let currentPage = 1;
+  let rows = [];
+  const body = document.getElementById('tableBody');
+  const pager = document.getElementById('pagination');
+  const total = document.getElementById('totalLiveToken');
+  const refreshBtn = document.getElementById('refreshList');
+
+  function clean(s){
+    return (s || '').replace(/\s+/g,' ').trim().toLowerCase();
+  }
+
+  function getStatusCell(row){
+    const cells = row.querySelectorAll('td');
+    return cells.length ? cells[cells.length - 1] : null;
+  }
+
+  function applyStatusColor(row){
+    const cell = getStatusCell(row);
+    if(!cell) return;
+
+    cell.classList.remove(
+      'status-not-there','status-rejected','status-all-pass',
+      'status-approved','status-accepted','status-pending',
+      'status-violate','status-violated'
+    );
+
+    const s = clean(cell.textContent);
+
+    if(s.includes('not there')){
+      cell.classList.add('status-not-there');
+    }else if(s.includes('reject')){
+      cell.classList.add('status-rejected');
+    }else if(s.includes('all pass')){
+      cell.classList.add('status-all-pass');
+    }else if(s === 'approved' || s.includes('approved')){
+      cell.classList.add('status-approved');
+    }else if(s === 'accepted' || s.includes('accepted')){
+      cell.classList.add('status-accepted');
+    }else if(s.includes('pending')){
+      cell.classList.add('status-pending');
+    }else if(s.includes('violate')){
+      cell.classList.add('status-violate');
+    }
+  }
+
+  function collect(){
+    rows = [...body.querySelectorAll('tr')].filter(row=>{
+      const cells=row.querySelectorAll('td');
+      const text=clean(row.textContent);
+      return cells.length >= 3 && text && !text.includes('loading live data');
+    });
+
+    rows.forEach(applyStatusColor);
+    if(total) total.textContent = rows.length;
+
+    const pages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if(currentPage > pages) currentPage = pages;
+    render();
+  }
+
+  function render(){
+    [...body.querySelectorAll('tr')].forEach(r=>r.style.display='none');
+
+    const start=(currentPage-1)*PER_PAGE;
+    rows.slice(start,start+PER_PAGE).forEach(r=>r.style.display='');
+
+    const pageCount=Math.max(1,Math.ceil(rows.length/PER_PAGE));
+    renderPager(pageCount);
+  }
+
+  function renderPager(pageCount){
+    pager.innerHTML='';
+    if(rows.length <= PER_PAGE) return;
+
+    const prev=document.createElement('button');
+    prev.innerHTML='<i class="fa-solid fa-chevron-left"></i>';
+    prev.disabled=currentPage===1;
+    prev.onclick=()=>{currentPage--;render();};
+    pager.appendChild(prev);
+
+    for(let i=1;i<=pageCount;i++){
+      const b=document.createElement('button');
+      b.textContent=i;
+      if(i===currentPage)b.className='active';
+      b.onclick=()=>{currentPage=i;render();};
+      pager.appendChild(b);
+    }
+
+    const next=document.createElement('button');
+    next.innerHTML='<i class="fa-solid fa-chevron-right"></i>';
+    next.disabled=currentPage===pageCount;
+    next.onclick=()=>{currentPage++;render();};
+    pager.appendChild(next);
+
+    const info=document.createElement('span');
+    info.className='page-info';
+    info.textContent='Page '+currentPage+' of '+pageCount;
+    pager.appendChild(info);
+  }
+
+  // Refresh List: refreshes the page and reloads the live Sheet list.
+  if(refreshBtn){
+    refreshBtn.addEventListener('click',()=>{
+      refreshBtn.classList.add('loading');
+      location.reload();
+    });
+  }
+
+  // Detect live updates made by script.js.
+  const observer=new MutationObserver(()=>{
+    setTimeout(collect,50);
+  });
+  observer.observe(body,{childList:true,subtree:true,characterData:true});
+
+  setTimeout(collect,500);
+  setInterval(collect,1500);
+})();
+</script>
+
+
+<script>
+(function(){
+  const PER_PAGE = 15;
+  let currentPage = 1;
+  let rows = [];
+
+  const body = document.getElementById('tableBody');
+  const pager = document.getElementById('pagination');
+  const total = document.getElementById('totalLiveToken');
+
+  function cleanText(s){
+    return (s || '').replace(/\s+/g,' ').trim().toLowerCase();
+  }
+
+  function statusClass(row){
+    const cells = [...row.querySelectorAll('td')];
+    const text = cleanText(cells.map(c=>c.textContent).join(' '));
+
+    if(/not\s*there/.test(text)) return 'status-not-there';
+    if(/reject|rejected/.test(text)) return 'status-rejected';
+    if(/all\s*pass|all\s*passed/.test(text)) return 'status-all-pass';
+    if(/\bapproved\b|\baccepted\b/.test(text)) return 'status-approved';
+    if(/\bpending\b/.test(text)) return 'status-pending';
+    if(/violate|violated|violation/.test(text)) return 'status-violate';
+    return '';
+  }
+
+  function isDataRow(row){
+    if(!row) return false;
+    const cells = row.querySelectorAll('td');
+    if(!cells.length) return false;
+    const txt = cleanText(row.textContent);
+    return txt && !/loading live data/.test(txt) && cells.length >= 1;
+  }
+
+  function collectRows(){
+    rows = [...body.querySelectorAll('tr')].filter(isDataRow);
+
+    rows.forEach(row=>{
+      row.classList.remove(
+        'status-not-there','status-rejected','status-all-pass',
+        'status-approved','status-accepted','status-pending',
+        'status-violate','status-violated'
+      );
+      const cls = statusClass(row);
+      if(cls) row.classList.add(cls);
+    });
+
+    if(total) total.textContent = rows.length;
+    const pages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
+    if(currentPage > pages) currentPage = pages;
+    renderPage();
+  }
+
+  function renderPage(){
+    [...body.querySelectorAll('tr')].forEach(r=>r.style.display='none');
+
+    const start = (currentPage-1)*PER_PAGE;
+    rows.slice(start,start+PER_PAGE).forEach(r=>r.style.display='');
+
+    renderPagination(Math.max(1,Math.ceil(rows.length/PER_PAGE)));
+  }
+
+  function renderPagination(pageCount){
+    if(!pager) return;
+    pager.innerHTML = '';
+
+    if(rows.length <= PER_PAGE) return;
+
+    const prev = document.createElement('button');
+    prev.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+    prev.disabled = currentPage === 1;
+    prev.onclick = ()=>{currentPage--;renderPage()};
+    pager.appendChild(prev);
+
+    for(let i=1;i<=pageCount;i++){
+      const b=document.createElement('button');
+      b.textContent=i;
+      b.className=i===currentPage?'active':'';
+      b.onclick=()=>{currentPage=i;renderPage()};
+      pager.appendChild(b);
+    }
+
+    const next=document.createElement('button');
+    next.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+    next.disabled = currentPage === pageCount;
+    next.onclick = ()=>{currentPage++;renderPage()};
+    pager.appendChild(next);
+
+    const info=document.createElement('span');
+    info.className='page-info';
+    info.textContent='Page '+currentPage+' of '+pageCount;
+    pager.appendChild(info);
+  }
+
+  // Re-run whenever script.js updates the Google Sheet token list.
+  const observer = new MutationObserver(()=>setTimeout(collectRows,40));
+  observer.observe(body,{childList:true,subtree:true,characterData:true});
+
+  // Initial + periodic refresh for compatibility with live Sheet updates.
+  setTimeout(collectRows,500);
+  setInterval(collectRows,1500);
+})();
+</script>
+
+
+</body>
+</html>
