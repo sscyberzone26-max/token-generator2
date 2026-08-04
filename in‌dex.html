@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SS CYBER ZONE | Smart Token System</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+
+<link rel="stylesheet" href="style.css">
+
+
+<style>
+/* Compact token table */
+.tableContainer {
+  overflow-x: auto;
+}
+.tableContainer table {
+  border-collapse: collapse;
+}
+.tableContainer th,
+.tableContainer td {
+  padding: 8px 12px !important;
+  height: 38px !important;
+  line-height: 1.15 !important;
+}
+.tableContainer tbody tr {
+  height: 42px !important;
+}
+.tableContainer td {
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+.pagination {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:7px;
+  margin:12px 0 6px;
+  flex-wrap:wrap;
+}
+.pagination button {
+  min-width:34px;
+  height:34px;
+  padding:0 10px;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:9px;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-family:inherit;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+}
+.pagination button:hover {
+  background:rgba(255,255,255,.16);
+}
+.pagination button.active {
+  background:#08b9ff;
+  border-color:#08b9ff;
+  color:#fff;
+}
+.pagination button:disabled {
+  opacity:.4;
+  cursor:not-allowed;
+}
+.pageInfo {
+  color:rgba(255,255,255,.72);
+  font-size:12px;
+  margin-left:4px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="overlay"></div>
+
+<div class="container">
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+<div class="logoSection">
+
+<h1>
+
+SS CYBER ZONE
+
+</h1>
+
+<p>
+
+Smart Token System
+
+</p>
+
+<div class="live">
+
+<span></span>
+
+LIVE
+
+</div>
+
+</div>
+
+<div class="dateTime">
+
+<div class="dateBox">
+
+<i class="fa-solid fa-calendar-days"></i>
+
+<span id="date"></span>
+
+</div>
+
+<div class="timeBox">
+
+<i class="fa-solid fa-clock"></i>
+
+<span id="time"></span>
+
+</div>
+
+</div>
+
+</header>
+
+<!-- ================= TITLE ================= -->
+
+<div class="title">
+
+<h2>
+
+LIVE TOKEN LIST
+
+</h2>
+
+<p>
+
+Real-time update
+
+</p>
+
+</div>
+
+<!-- ================= BUTTON ================= -->
+
+<div class="buttonArea">
+
+<a
+
+href="https://sscyberzone26-max.github.io/SS-CYBER-ZONE/"
+
+target="_blank"
+
+class="btn primary">
+
+<i class="fa-solid fa-ticket"></i>
+
+Get a New Token Number
+
+</a>
+
+<button
+
+id="showQR"
+
+class="btn secondary">
+
+<i class="fa-solid fa-qrcode"></i>
+
+Show QR
+
+</button>
+
+</div>
+
+<!-- ================= SEARCH ================= -->
+
+<div class="searchBox">
+
+<input
+
+type="text"
+
+id="search"
+
+placeholder="Search Token / Name...">
+
+</div>
+
+<!-- ================= COUNTER ================= -->
+
+<div class="counter">
+
+Total Live Token :
+
+<span id="totalToken">
+
+0
+
+</span>
+
+</div>
+
+<!-- ================= TABLE ================= -->
+
+<div class="tableContainer">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+
+Token
+
+</th>
+
+<th>
+
+Name
+
+</th>
+
+<th>
+
+Our Status
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tableBody">
+
+<tr>
+
+<td colspan="3">
+
+Loading...
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- ================= PAGINATION ================= -->
+<div id="pagination" class="pagination" aria-label="Token pages"></div>
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+<i class="fa-solid fa-bolt"></i>
+
+Powered By
+
+<b>
+
+SS CYBER ZONE
+
+</b>
+
+</footer>
+
+</div>
+
+<!-- ================= QR MODAL ================= -->
+
+<div
+
+class="modal"
+
+id="qrModal">
+
+<div class="modalBox">
+
+<span
+
+id="closeQR"
+
+class="close">
+
+×
+
+</span>
+
+<h2>
+
+Scan QR
+
+</h2>
+
+<img
+
+src="qr.png"
+
+class="qrImage"
+
+alt="QR">
+
+<a
+
+href="qr.png"
+
+download
+
+class="download">
+
+<i class="fa-solid fa-download"></i>
+
+Download QR
+
+</a>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+(function () {
+  const ROWS_PER_PAGE = 25;
+  const tbody = document.getElementById("tableBody");
+  const pagination = document.getElementById("pagination");
+  const search = document.getElementById("search");
+  let currentPage = 1;
+  let lastSignature = "";
+
+  function getRows() {
+    return Array.from(tbody.querySelectorAll("tr")).filter(tr => {
+      const cells = tr.querySelectorAll("td");
+      return cells.length >= 3 && !/loading/i.test(tr.textContent.trim());
+    });
+  }
+
+  function signature(rows) {
+    return rows.map(r => r.innerText.trim()).join("||");
+  }
+
+  function renderPagination(totalPages) {
+    pagination.innerHTML = "";
+    if (totalPages <= 1) return;
+
+    const prev = document.createElement("button");
+    prev.textContent = "‹";
+    prev.title = "Previous";
+    prev.disabled = currentPage === 1;
+    prev.onclick = () => { currentPage--; update(true); };
+    pagination.appendChild(prev);
+
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = i;
+      btn.className = i === currentPage ? "active" : "";
+      btn.onclick = () => { currentPage = i; update(true); };
+      pagination.appendChild(btn);
+    }
+
+    const next = document.createElement("button");
+    next.textContent = "›";
+    next.title = "Next";
+    next.disabled = currentPage === totalPages;
+    next.onclick = () => { currentPage++; update(true); };
+    pagination.appendChild(next);
+
+    const info = document.createElement("span");
+    info.className = "pageInfo";
+    info.textContent = "Page " + currentPage + " / " + totalPages;
+    pagination.appendChild(info);
+  }
+
+  function update(force) {
+    let rows = getRows();
+    const sig = signature(rows);
+    if (!force && sig === lastSignature) return;
+
+    // Keep search working with pagination.
+    const query = (search?.value || "").trim().toLowerCase();
+    if (query) {
+      rows = rows.filter(row => row.innerText.toLowerCase().includes(query));
+    }
+
+    const totalPages = Math.max(1, Math.ceil(rows.length / ROWS_PER_PAGE));
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    // Hide all currently available rows, then show only this page.
+    getRows().forEach(row => row.style.display = "none");
+    const start = (currentPage - 1) * ROWS_PER_PAGE;
+    rows.slice(start, start + ROWS_PER_PAGE).forEach(row => row.style.display = "");
+
+    renderPagination(totalPages);
+    lastSignature = sig;
+  }
+
+  // Search input: reset to page 1 when search text changes.
+  if (search) {
+    search.addEventListener("input", () => {
+      currentPage = 1;
+      lastSignature = "";
+      update(true);
+    });
+  }
+
+  // script.js may load/update rows later, so watch the table.
+  const observer = new MutationObserver(() => {
+    currentPage = Math.min(currentPage, Math.max(1, Math.ceil(getRows().length / ROWS_PER_PAGE)));
+    lastSignature = "";
+    update(true);
+  });
+  observer.observe(tbody, { childList: true, subtree: true });
+
+  // Initial + periodic refresh for data loaded asynchronously.
+  update(true);
+  setInterval(() => update(false), 1000);
+})();
+</script>
+
+</body>
+</html>
